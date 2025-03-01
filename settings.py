@@ -12,7 +12,7 @@ class Settings:
         self.ship_limit = 3
 
         #Bullet settings
-        self.bullet_width = 100
+        self.bullet_width = 500
         self.bullet_height = 15
         self.bullet_color = (60, 60, 60)
         self.bullets_allowed = 3
@@ -33,6 +33,9 @@ class Settings:
 
         #fleet direction of 1 represents right; -1 represents left
         self.fleet_direction = 1
+
+        #Scoring
+        self.alien_points = 50
 
     def increase_speed(self):
         """Increase speed settings"""
