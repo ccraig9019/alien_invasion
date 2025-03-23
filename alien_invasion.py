@@ -64,21 +64,18 @@ class AlienInvasion:
         """Start a new game when the player clicks Play"""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)       
         if button_clicked and not self.stats.game_active:
-            #Reset game settings
-            self.settings.initialise_dynamic_settings()
-            #Reset the game statistics
-            self.stats.reset_stats()
-            self.stats.game_active = True
-            self.sb.prep_score()
-            self.sb.prep_level()
-
             self._start_game()
 
     def _start_game(self):
+        #Reset game settings
+        self.settings.initialise_dynamic_settings()
+
         #Reset the game statistics
         self.stats.reset_stats()
         self.stats.game_active = True
         self.sb.prep_score()
+        self.sb.prep_level()
+        self.sb.prep_ships()
 
         #Get rid of any remaining aliens and bullets
         self.aliens.empty()
@@ -98,6 +95,7 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
         elif event.key == pygame.K_q:
+            self._write_high_score()
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
@@ -223,8 +221,9 @@ class AlienInvasion:
     def _ship_hit(self):
         """Respond to the ship being hit by an alien"""
         if self.stats.ships_left > 0:
-            #Decrement ships left
+            #Decrement ships left and update scoreboard
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
 
             #Get rid of any remaining aliens and bullets
             self.aliens.empty()
@@ -249,6 +248,10 @@ class AlienInvasion:
                 #Treat this the same as if the ship got hit
                 self._ship_hit()
                 break
+
+    def _write_high_score(self):
+        with open('high_score.txt', 'w') as f:
+            f.write(str(self.stats.high_score))
 
 if __name__ == '__main__':
     #Make a game instance and run the game.
